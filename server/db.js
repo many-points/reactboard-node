@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const autoIncrement = require('mongoose-auto-increment');
 
 const uri = require('./dbconfig');
@@ -10,11 +11,17 @@ autoIncrement.initialize(db);
 db.once('open', () => console.log('connected to db'));
 db.on('error', (err) => console.log('database error:', err));
 
-const Post = new mongoose.Schema({
-  text:       {type: String, default: ''},
-  ip:         {type: String, default: '0.0.0.0'},
-  imagePath:  {type: String, default: ''},
-  token:      {type: String, default: ''}
+const Post = new Schema({
+  text: {type: String, default: ''},
+  thread: {type: Schema.Types.ObjectId, ref: 'Thread'},
+  isOp: {type: Boolean, default: false}
+}, {
+  timestamps: true
+});
+
+const Thread = new Schema({
+  op: {type: Schema.Types.ObjectId, ref: 'Post'},
+  posts: [{type: Schema.Types.ObjectId, ref: 'Post'}]
 }, {
   timestamps: true
 });
@@ -22,5 +29,6 @@ const Post = new mongoose.Schema({
 Post.plugin(autoIncrement.plugin, {model: 'Post', field: 'postId'});
 
 module.exports = {
-  Post: db.model('Post', Post)
+  Post: db.model('Post', Post),
+  Thread: db.model('Thread', Thread)
 };
