@@ -6,65 +6,60 @@ const mongoose = require('mongoose');
 const app = express();
 const router = express.Router();
 
-const db = require('./db');
-const Post = db.Post;
-const Thread = db.Thread;
+const { Post, Thread } = require('./db');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-router.get('/threads', (req, res) => {
+router.get('/thread', (req, res) => {
   Thread.find()
-    .populate('op')
-    .exec((err, data) => {
-      if(err) return res.json({ success: false, error: err });
-      return res.json({ success: true, data: data });
-    });
+  .populate('posts')
+  .exec()
+  .then(data => res.json({ success: true, data }))
+  .catch(err => res.json({ success: false, error: err }));
 });
 
-router.post('/threads', (req, res) => {
-  if(_.isEmpty(req.body)) {
-    return res.json({ success: false, error: 'Your request is empty'});
-  }
-  const op = new Post({
-    _id: new mongoose.Types.ObjectId(),
-    text: req.body.text,
-    isOp: true
-  });
+router.post('/thread', (req, res) => {
+  if( _.isEmpty(req.body))
+    return res.json({ success: false, error: 'Your request is empty.' });
+
   const thread = new Thread({
-    _id: new mongoose.Types.ObjectId(),
-    op: op._id
+    _id: new mongoose.Types.ObjectId()
   });
-  op.thread = thread._id;
-  op.save(err => {
-    if(err) return res.json({ success: false, error: err });
-    thread.save(err => {
-      if(err) return res.json({ success: false, error: err })
-      return res.json({ success: true, thread: thread._id })
-    });  
+  
+  const opPost = new Post({
+    text: req.body.text,
   });
+
+  thread.posts.push(opPost);
+
+  opPost.save()
+  .then(() => thread.save())
+  .then(() => res.json({ success: true }))
+  .catch(err => res.json({ success: false, error: err }));
 });
 
-router.get('/posts', (req, res) => {
-  Post.find((err, data) => {
-    return err
-      ? res.json({ success: false, error: err })
-      : res.json({ success: true, data: data });
-  });
+router.get('/post', (req, res) => {
+  Post.find()
+  .exec()
+  .then(data => res.json({ success: true, data }))
+  .catch(err => res.json({ success: false, error: err }));
 });
 
-router.post('/posts', (req, res) => {
-  if(_.isEmpty(req.body)) {
+router.post('/post', (req, res) => {
+  if(_.isEmpty(req.body))
     return res.json({ success: false, error: 'Your request is empty.'});
-  }
-  const post = new db.Post();
-  const { text } = req.body;
-  post.text = text;
-  post.save(err => {
-    return err
-      ? res.json({ success: false, error: err })
-      : res.json({ success: true });
+
+  const { text, threadId } = req.body;
+
+  const post = new Post({
+    text
   });
+
+  Thread.findOneAndUpdate({ _id: threadId }, { $push: { posts: post }})
+  .then(() => post.save())
+  .then(() => res.json({ success: true }))
+  .catch(err => res.json({ success: false, error: err }));  
 });
 
 app.use('/api', router);
