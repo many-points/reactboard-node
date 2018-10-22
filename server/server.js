@@ -14,7 +14,13 @@ app.use(bodyParser.json());
 router.get('/thread', (req, res) => {
   Thread.find()
   .populate('posts')
-  .exec()
+  .then(data => res.json({ success: true, data }))
+  .catch(err => res.json({ success: false, error: err }));
+});
+
+router.get('/thread/:id', (req, res) => {
+  Thread.findById(req.params.id)
+  .populate('posts')
   .then(data => res.json({ success: true, data }))
   .catch(err => res.json({ success: false, error: err }));
 });
