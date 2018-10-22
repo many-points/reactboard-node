@@ -23,7 +23,6 @@ class Thread extends Component {
   }
 
   render() {
-    console.log(this.state.posts)
     const posts = this.state.posts.map((post, index) => {
       return (
         <li key={index}>

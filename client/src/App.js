@@ -14,11 +14,13 @@ class App extends Component {
     return (
      <Router>
       <div className='App'>
-       <Route exact path='/thread/:id'
-        render={ (props) =>
-         <Thread id={props.match.params.id}
-          getThreadData={this.getThreadData} /> }
-       />
+       <div className='container'>
+        <Route exact path='/thread/:id'
+         render={ (props) =>
+          <Thread id={props.match.params.id}
+           getThreadData={this.getThreadData} /> }
+        />
+       </div>
       </div>
      </Router>
     );
