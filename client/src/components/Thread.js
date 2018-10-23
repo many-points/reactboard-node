@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
+import { formatDate } from '../utils/date';
 
 function Post(props) {
+  const date = new Date(props.createdAt);
   return (
-    <div className='post'>
-      <span className='postText'> {props.text} </span>
+    <div className='post floaty'>
+     <div className='postMetadata'>
+      <a href='#' className='postId'>
+       <span>{props.id}</span>
+      </a>
+      &nbsp;
+      <span className='postTimestamp'>{formatDate(date)}</span>
+     </div>
+     <span className='postText'> {props.text} </span>
     </div>
   );
 }
@@ -25,8 +34,8 @@ class Thread extends Component {
   render() {
     const posts = this.state.posts.map((post, index) => {
       return (
-        <li key={index}>
-          <Post text={post.text} />
+        <li key={post._id}>
+         <Post id={post._id} text={post.text} createdAt={post.createdAt}/>
         </li>
       );
     });

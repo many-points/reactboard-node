@@ -16,15 +16,79 @@ body, html {
   margin: 0;
 }
 
+.btn {
+  background-color: #007bff;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: .75rem;
+  font-weight: 300;
+  color: #eee;
+  border-radius: 3px;
+  border: 1px solid transparent; 
+  transition: all ease-in-out .15s;
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.btn:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
 .container {
   width: 80vw;
   margin: auto;
   padding: 10px 0;
 }
 
-.post {
+.floaty {
   margin: 10px 0;
   padding: 10px;
   background-color: #e9ecef;
   border-radius: 5px;
+}
+
+.postMetadata {
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  font-size: .75rem;
+  color: #bbb;
+  margin-bottom: 10px;
+}
+
+.postId {
+  text-decoration: none;
+  color: #bbb;
+}
+
+.postForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.formTextarea {
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px;
+  border-radius: 3px;
+  border: 1px solid #cdd;
+  margin-bottom: 5px;
+}
+
+.formButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.formSubmit {
+}
+
+.formMessageBox {
+  color: #bbb;
+  font-size: .75rem;
+  vertical-align: middle;
+  padding: 6px 0;
 }

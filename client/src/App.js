@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Thread from './components/Thread';
+import PostForm from './components/PostForm';
 
 import './App.css';
 
@@ -15,6 +16,10 @@ class App extends Component {
      <Router>
       <div className='App'>
        <div className='container'>
+        <Route path='/thread'
+         render={ (props) =>
+          <PostForm /> }
+        />
         <Route exact path='/thread/:id'
          render={ (props) =>
           <Thread id={props.match.params.id}
