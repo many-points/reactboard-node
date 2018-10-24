@@ -6,11 +6,12 @@ import Loading from './Loading';
 
 function Post(props) {
   const date = new Date(props.createdAt);
+  const humanId = props.humanId || 'nothing';
   return (
     <div className='post floaty'>
      <div className='postMetadata'>
       <a href='#' className='postId'>
-       <span>{props.id}</span>
+       <span>{humanId}</span>
       </a>
       &nbsp;
       <span className='postTimestamp'>{formatDate(date)}</span>
@@ -59,7 +60,7 @@ class Thread extends Component {
     const posts = this.state.posts.map((post, index) => {
       return (
         <li key={post._id}>
-         <Post id={post._id} text={post.text} createdAt={post.createdAt}/>
+         <Post id={post._id} humanId={post.humanId} text={post.text} createdAt={post.createdAt}/>
         </li>
       );
     }).reverse();

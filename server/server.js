@@ -7,6 +7,7 @@ const app = express();
 const router = express.Router();
 
 const { Post, Thread } = require('./db');
+const hash = require('./utils/hash');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -33,7 +34,10 @@ router.post('/thread', (req, res) => {
     _id: new mongoose.Types.ObjectId()
   });
   
+  const postId = new mongoose.Types.ObjectId();
   const opPost = new Post({
+    _id: postId,
+    humanId: hash(postId.toString()),
     text: req.body.text,
   });
 
@@ -61,7 +65,10 @@ router.post('/post', (req, res) => {
   
   const { text, threadId } = req.body;
 
+  const postId = new mongoose.Types.ObjectId();
   const post = new Post({
+    _id: postId,
+    humanId: hash(postId.toString()),
     text
   });
 
