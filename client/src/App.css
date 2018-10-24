@@ -21,7 +21,7 @@ body, html {
   padding: 6px 12px;
   font-family: inherit;
   font-size: .75rem;
-  font-weight: 300;
+  font-weight: 400;
   color: #eee;
   border-radius: 3px;
   border: 1px solid transparent; 
@@ -47,6 +47,71 @@ body, html {
   padding: 10px;
   background-color: #e9ecef;
   border-radius: 5px;
+}
+
+.post {
+  transition: all ease-in-out .1s;
+  animation: slide-up 0.4s ease;
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loading {
+  margin: auto;
+  width: 32px;
+  height: 32px;
+  transition: all ease-in-out .1s;
+  animation: slide-up 0.4s ease;
+}
+
+.loading > div {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  background-color: #e9ecef;
+  animation: spin 1s ease-in infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: perspective(100px) rotateX(0) rotateY(0);
+  }
+  25% {
+    transform: perspective(100px) rotateX(180deg) rotateY(0);
+  }
+  50% {
+    transform: perspective(100px) rotateX(180deg) rotateY(180deg);
+  }
+  75% {
+    transform: perspective(100px) rotateX(0) rotateY(180deg);
+  }
+  100% {
+    transform: perspective(100px) rotateX(0) rotateY(360deg);
+  }
+}
+
+.textAlert {
+  animation: flash 1s ease-out;
+}
+
+@keyframes flash {
+  0% {
+    background-color: red;
+    color: black;
+  }
+  100% {
+    background-color: #e9ecef;
+    color: #bbb;
+  }
 }
 
 .postMetadata {
@@ -83,12 +148,10 @@ body, html {
   justify-content: space-between;
 }
 
-.formSubmit {
-}
-
 .formMessageBox {
   color: #bbb;
   font-size: .75rem;
   vertical-align: middle;
   padding: 6px 0;
+  transition: all ease-in-out .1s;
 }

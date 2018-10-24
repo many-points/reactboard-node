@@ -56,6 +56,9 @@ router.post('/post', (req, res) => {
   if(_.isEmpty(req.body))
     return res.json({ success: false, error: 'Your request is empty.'});
 
+  if(!_.has(req.body, 'threadId') || req.body.threadId === '')
+    return res.json({ success: false, error: 'Need thread ID for posting.'});
+  
   const { text, threadId } = req.body;
 
   const post = new Post({
@@ -64,7 +67,7 @@ router.post('/post', (req, res) => {
 
   Thread.findOneAndUpdate({ _id: threadId }, { $push: { posts: post }})
   .then(() => post.save())
-  .then(() => res.json({ success: true }))
+  .then(() => res.json({ success: true, post }))
   .catch(err => res.json({ success: false, error: err }));  
 });
 

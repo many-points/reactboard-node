@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { formatDate } from '../utils/date';
 
+import PostForm from './PostForm';
+import Loading from './Loading';
+
 function Post(props) {
   const date = new Date(props.createdAt);
   return (
@@ -22,13 +25,34 @@ class Thread extends Component {
     super(props);
     this.state = {
       id: this.props.id,
-      posts: []
+      posts: [],
+      loading: false
     }
+
+    this.addPost = this.addPost.bind(this);
+  }
+
+  componentWillMount() {
+    this.setState({ loading: true });
+    fetch(`/api/thread/${this.state.id}`)
+    .then(res => res.json())
+    .then(res => this.setState({ posts: res.data.posts, loading: false }));
   }
 
   componentDidMount() {
-    this.props.getThreadData(this.state.id)
-    .then((res) => this.setState({ posts: res.data.posts }));
+
+  }
+
+  addPost(threadId, text) {
+    const request = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({threadId, text})
+    }
+    this.setState({ loading: true });
+    return fetch(`/api/post`, request)
+    .then(res => res.json())
+    .then(res => this.setState({ posts: [...this.state.posts, res.post], loading: false }));
   }
 
   render() {
@@ -38,9 +62,12 @@ class Thread extends Component {
          <Post id={post._id} text={post.text} createdAt={post.createdAt}/>
         </li>
       );
-    });
+    }).reverse();
     return (
-      <ul className='unstyled'> {posts} </ul>
+      <>
+        <PostForm id={this.state.id} addPost={this.addPost} />
+        <ul className='unstyled posts'> {this.state.loading && <Loading />} {posts} </ul>
+      </>
     );
   }
 }

@@ -1,6 +1,7 @@
 const formatDate = (date) => {
+  const pad = (n) => n < 10 ? '0' + n : n;
   return `${date.toDateString().replace(/\s/g, '\xa0')}\xa0` +
-         `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+         `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 };
 
 export { formatDate };
