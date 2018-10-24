@@ -13,10 +13,9 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "fnv1a": "^1.0.1",
+    "fnv-plus": "git+https://git@github.com/tjwebb/fnv-plus.git",
     "lodash": "^4.17.11",
-    "mongoose": "^5.3.4",
-    "mongoose-auto-increment": "^5.0.1"
+    "mongoose": "^5.3.4"
   },
   "devDependencies": {
     "nodemon": "^1.18.4"

@@ -80,7 +80,7 @@ router.post('/post', (req, res) => {
 
 app.use('/api', router);
 
-app.listen(3001, (err) => {
+app.listen(3001, '0.0.0.0', (err) => {
   err ? console.log('error:', err)
       : console.log('listening...');
 });

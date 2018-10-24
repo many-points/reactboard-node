@@ -1,12 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const fnv1a = require('fnv1a');
+const fnv1ax = require('fnv-plus').hash;
 const dict = fs.readFileSync(path.join(__dirname, 'words.txt')).toString().split('\n');
 
 function hash(str) {
-  let words = 3;
-  let key = fnv1a(str.toString());
+  if(typeof str !== 'string') str = str.toString();
+  let words = 2;
+  let key = fnv1a(str).dec();
   const len = dict.length;
 
   let rem;
@@ -16,8 +17,8 @@ function hash(str) {
     key = Math.floor(key / len);
     if(key === 0) break;
     result.push(dict[rem]);
-}
-  if(result.length === 0) throw Error('No human hash to display.');
+  }
+
   return result.join('~');
 }
 

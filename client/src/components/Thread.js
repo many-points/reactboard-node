@@ -13,7 +13,6 @@ function Post(props) {
       <a href='#' className='postId'>
        <span>{humanId}</span>
       </a>
-      &nbsp;
       <span className='postTimestamp'>{formatDate(date)}</span>
      </div>
      <span className='postText'> {props.text} </span>

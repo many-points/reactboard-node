@@ -34,10 +34,8 @@ class PostForm extends Component {
   }
 
   handleShortcut(event) {
-    // console.log(event)
     if (event.keyCode === 13 && event.altKey) {
       event.preventDefault();
-      console.log(this.refs)
       this.refs.submit.click();
     }
   }

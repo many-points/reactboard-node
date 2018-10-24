@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 
 import Thread from './components/Thread';
 
@@ -12,11 +12,13 @@ class App extends Component {
     }
 
     return (
-     <Router>
-       <div className='container'>
-        <Route exact path='/thread/:id' render={renderThread} />
-       </div>
-     </Router>
+      <Router>
+        <div className='container'>
+          {/* Temporary redirect */}
+          <Route exact path='/' render={() => <Redirect to='/thread/5bcca0db8c9b5219d6102f75' />} />
+          <Route exact path='/thread/:id' render={renderThread} />
+        </div>
+      </Router>
     );
   }
 }
