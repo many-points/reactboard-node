@@ -22,14 +22,14 @@ class PostForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    if(this.state.text === '') {
-      this.setState({message: messages.empty, alert: true});
-      setTimeout(() => this.setState({alert: false}), 1000);
-      setTimeout(() => this.setState({message: messages.hotkey}), 3000);
+    this.setState({alert: false});
+    const text = this.state.text.trim();
+    if(text === '') {
+      setTimeout(() => this.setState({message: messages.empty, alert: true}), 0);
       return;
     }
     this.setState({loading: true});
-    this.props.addPost(this.props.id, this.state.text)
+    this.props.addPost(this.props.id, text)
     .then(() => this.setState({text: '', loading: false}));
   }
 

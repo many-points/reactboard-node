@@ -10,12 +10,12 @@ function Post(props) {
   return (
     <div className='post floaty'>
      <div className='postMetadata'>
-      <a href='#' className='postId'>
+      <a href='#' className={`postId ${props.dubs ? 'dubs' : ''}`}>
        <span>{humanId}</span>
       </a>
       <span className='postTimestamp'>{formatDate(date)}</span>
      </div>
-     <span className='postText'> {props.text} </span>
+     <p className='postText unstyled'>{props.text}</p>
     </div>
   );
 }
@@ -55,18 +55,27 @@ class Thread extends Component {
     .then(res => this.setState({ posts: [...this.state.posts, res.post], loading: false }));
   }
 
+  checkdubs(hash) {
+    const parts = hash.split('~');
+    return parts[0] == parts[1];
+  }
+
   render() {
     const posts = this.state.posts.map((post, index) => {
       return (
         <li key={post._id}>
-         <Post id={post._id} humanId={post.humanId} text={post.text} createdAt={post.createdAt}/>
+          <Post id={post._id}
+                humanId={post.humanId}
+                text={post.text}
+                createdAt={post.createdAt}
+                dubs={this.checkdubs(post.humanId)} />
         </li>
       );
     }).reverse();
     return (
       <>
         <PostForm id={this.state.id} addPost={this.addPost} />
-        <ul className='unstyled posts'> {this.state.loading && <Loading />} {posts} </ul>
+        <ul className='unstyled posts'>{this.state.loading && <Loading />}{posts}</ul>
       </>
     );
   }

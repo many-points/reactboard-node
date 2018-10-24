@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const fnv1ax = require('fnv-plus').hash;
+const fnv1a = require('fnv-plus').hash;
 const dict = fs.readFileSync(path.join(__dirname, 'words.txt')).toString().split('\n');
 
 function hash(str) {
