@@ -14,8 +14,6 @@ class PostForm extends Component {
       alert: false,
       loading: false
     }
-
-    this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event) {
@@ -35,15 +33,25 @@ class PostForm extends Component {
     .then(() => this.setState({text: '', loading: false}));
   }
 
+  handleShortcut(event) {
+    // console.log(event)
+    if (event.keyCode === 13 && event.altKey) {
+      event.preventDefault();
+      console.log(this.refs)
+      this.refs.submit.click();
+    }
+  }
+
   render() {
     return (
       <form className='form floaty' onSubmit={this.handleSubmit.bind(this)}>
         <textarea
           className='formTextarea' rows='7'
           value={this.state.text}
-          onChange={this.handleChange} />
+          onChange={this.handleChange.bind(this)}
+          onKeyDown={this.handleShortcut.bind(this)} />
         <div className='formButtons'>
-          <input className='formSubmit btn' type='submit' value='Post' />
+          <input className='formSubmit btn' type='submit' value='Post' ref='submit' />
           <span className={`formMessageBox ${this.state.alert ? 'textAlert' : ''}`}>
             {this.state.message}
           </span>
