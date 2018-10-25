@@ -1,24 +1,31 @@
 import React, { Component } from 'react';
 
-const messages = {
-  hotkey: 'Press\xa0Alt+Enter\xa0to\xa0post',
-  empty:  'Posts\xa0can\'t\xa0be\xa0empty'
-}
+class Form extends Component {
+  messages = {
+    default: '',
+    hotkey: 'Press\xa0Alt+Enter\xa0to\xa0post',
+    empty:  'Posts\xa0can\'t\xa0be\xa0empty'
+  }
 
-class PostForm extends Component {
+  buttonText = 'Post';
+
   constructor(props) {
     super(props);
     this.state = {
       text: '',
-      message: messages.hotkey,
+      message: 'hotkey',
       alert: false,
       loading: false
     }
+    if(props.threadForm) {
+      this.messages.hotkey = 'Press\xa0Alt+Enter\xa0to\xa0create\xa0thread';
+      this.buttonText = 'Create';  
+    }
   }
-
+  
   handleChange(event) {
     this.setState({text: event.target.value});
-    setTimeout(() => this.setState({message: messages.hotkey, alert: false}), 0);
+    setTimeout(() => this.setState({message: 'hotkey', alert: false}), 0);
   }
 
   handleSubmit(event) {
@@ -26,11 +33,11 @@ class PostForm extends Component {
     this.setState({alert: false});
     const text = this.state.text.trim();
     if(text === '') {
-      setTimeout(() => this.setState({message: messages.empty, alert: true}), 100);
+      setTimeout(() => this.setState({message: 'empty', alert: true}), 100);
       return;
     }
     this.setState({loading: true});
-    this.props.addPost(this.props.id, text)
+    this.props.submit({threadId: this.props.id, text})
     .then(() => this.setState({text: '', loading: false}));
   }
 
@@ -43,16 +50,16 @@ class PostForm extends Component {
 
   render() {
     return (
-      <form className='form floaty' onSubmit={this.handleSubmit.bind(this)}>
+      <form className='form floaty slide-up' onSubmit={this.handleSubmit.bind(this)}>
         <textarea
           className='formTextarea' rows='7'
           value={this.state.text}
           onChange={this.handleChange.bind(this)}
           onKeyDown={this.handleShortcut.bind(this)} />
         <div className='formButtons'>
-          <input className='formSubmit btn' type='submit' value='Post' ref='submit' />
+          <input className='formSubmit btn' type='submit' value={this.buttonText} ref='submit' />
           <span className={`formMessageBox ${this.state.alert ? 'textAlert' : ''}`}>
-            {this.state.message}
+            {this.messages[this.state.message]}
           </span>
         </div>
       </form>
@@ -60,4 +67,4 @@ class PostForm extends Component {
   }
 }
 
-export default PostForm;
+export default Form;

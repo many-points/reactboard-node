@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 
 import Thread from './components/Thread';
-import ThreadList from './components/ThreadList';
+import Board from './components/Board';
 
 import './App.css';
 
@@ -12,7 +12,7 @@ class App extends Component {
       return <Thread id={props.match.params.id} />;
     }
     const renderThreadList = (props) => {
-      return <ThreadList />;
+      return <Board />;
     }
 
     return (

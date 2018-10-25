@@ -46,7 +46,7 @@ router.post('/thread', (req, res) => {
 
   opPost.save()
   .then(() => thread.save())
-  .then(() => res.json({ success: true }))
+  .then(() => res.json({ success: true, thread }))
   .catch(err => res.json({ success: false, error: err }));
 });
 

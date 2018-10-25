@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import fetch from '../utils/timeout';
 
-import Post from './Post';
 import Form from './Form';
+import Post from './Post';
 import Loading from './Loading';
 
-
-class Thread extends Component {
+class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.id,
-      op: '',
-      posts: [],
-      showForm: false,
+      threads: [],
       loading: false,
       error: false
     }
@@ -21,54 +18,57 @@ class Thread extends Component {
 
   componentWillMount() {
     this.setState({ loading: true });
-    fetch(`/api/thread/${this.state.id}`)
+    fetch(`/api/thread`)
     .then(res => res.json())
-    .then(res => this.setState({ posts: res.data.posts, loading: false, op: res.data.op }))
+    .then(res => this.setState({ threads: res.data, loading: false }))
     .catch(error => {
       console.error(error);
       setTimeout(() => this.setState({error: true}));
     });
   }
 
-  addPost(data) {
+  addThread(data) {
     const request = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify(data)
     }
     this.setState({ loading: true });
-    return fetch(`/api/post`, request)
+    return fetch(`/api/thread`, request)
     .then(res => res.json())
     .then(res => {
       console.log(request.body)
       if(res.success === false) throw Error('Request failed');
-      this.setState({ posts: [...this.state.posts, res.post], loading: false },
+      this.setState({ threads: [...this.state.threads, res.thread], loading: false },
         () => window.scrollTo(0, document.body.scrollHeight));
     })
     .catch(error => {
-      console.error(error);
       setTimeout(() => this.setState({error: true}));
     });
   }
 
   render() {
-    const form = <Form key='form' id={this.state.id} submit={this.addPost.bind(this)} />;
+    const form = <Form key='form' id={this.state.id} submit={this.addThread.bind(this)} threadForm={true}/>;
     const loading = (this.state.loading || this.state.error) && <Loading error={this.state.error} />;
-    const posts = this.state.posts.map((post, index) => {
+    const threads = this.state.threads.map((thread, index) => {
       return (
-        <li key={post._id}>
-          <Post id={post._id}
-                humanId={post.humanId}
-                text={post.text}
-                createdAt={post.createdAt}
-                isOp={post._id === this.state.op} />
+        <li key={thread._id}>
+          <Post 
+            id={thread.op._id}
+            humanId={thread.op.humanId}
+            text={thread.op.text}
+            createdAt={thread.op.createdAt}
+            isThread={true}
+            linkTo={thread._id}
+            threadUpdatedAt={thread.updatedAt}
+          />
         </li>
       );
     });
     return (
       <>
         <ul className='unstyled posts'>
-          {posts.length !== 0 && [...posts, form]}
+          {threads.length !== 0 && [...threads, form]}
         </ul>
         {loading}
       </>
@@ -76,4 +76,4 @@ class Thread extends Component {
   }
 }
 
-export default Thread;
+export default Board;
