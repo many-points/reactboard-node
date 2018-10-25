@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Loading extends Component {
-  render() {
-    return <div className='loading'><div></div></div>;
-  }
+function Loading(props) {
+  return <div className='loading'><div className={props.error ? 'loadingError' : ''}></div></div>;
 }
 
 export default Loading;

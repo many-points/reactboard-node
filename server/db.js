@@ -15,7 +15,8 @@ const postSchema = new Schema({
 });
 
 const threadSchema = new Schema({
-  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
+  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+  op: {type: Schema.Types.ObjectId, ref: 'Post'}
 }, {
   timestamps: true
 });

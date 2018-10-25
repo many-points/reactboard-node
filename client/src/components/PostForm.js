@@ -18,6 +18,7 @@ class PostForm extends Component {
 
   handleChange(event) {
     this.setState({text: event.target.value});
+    setTimeout(() => this.setState({message: messages.hotkey, alert: false}), 0);
   }
 
   handleSubmit(event) {
@@ -25,7 +26,7 @@ class PostForm extends Component {
     this.setState({alert: false});
     const text = this.state.text.trim();
     if(text === '') {
-      setTimeout(() => this.setState({message: messages.empty, alert: true}), 0);
+      setTimeout(() => this.setState({message: messages.empty, alert: true}), 100);
       return;
     }
     this.setState({loading: true});

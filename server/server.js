@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 router.get('/thread', (req, res) => {
   Thread.find()
-  .populate('posts')
+  .populate('op')
   .then(data => res.json({ success: true, data }))
   .catch(err => res.json({ success: false, error: err }));
 });
@@ -42,6 +42,7 @@ router.post('/thread', (req, res) => {
   });
 
   thread.posts.push(opPost);
+  thread.op = opPost;
 
   opPost.save()
   .then(() => thread.save())
