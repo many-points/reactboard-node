@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import fetch from '../utils/timeout';
 
 import Form from './Form';
-import Post from './Post';
 import Loading from './Loading';
+import ThreadPreview from './ThreadPreview';
 
 class Board extends Component {
   constructor(props) {
@@ -12,15 +12,16 @@ class Board extends Component {
     this.state = {
       threads: [],
       loading: false,
-      error: false
+      error: false,
+      form: false
     }
   }
 
   componentWillMount() {
     this.setState({ loading: true });
-    fetch(`/api/thread`)
+    fetch(`/api/threads`)
     .then(res => res.json())
-    .then(res => this.setState({ threads: res.data, loading: false }))
+    .then(res => this.setState({ threads: res.data, loading: false, form: true }))
     .catch(error => {
       console.error(error);
       setTimeout(() => this.setState({error: true}));
@@ -34,7 +35,7 @@ class Board extends Component {
       body: JSON.stringify(data)
     }
     this.setState({ loading: true });
-    return fetch(`/api/thread`, request)
+    return fetch(`/api/threads`, request)
     .then(res => res.json())
     .then(res => {
       console.log(request.body)
@@ -48,12 +49,12 @@ class Board extends Component {
   }
 
   render() {
-    const form = <Form key='form' id={this.state.id} submit={this.addThread.bind(this)} threadForm={true}/>;
+    const form = this.state.form && <Form id={this.state.id} submit={this.addThread.bind(this)} threadForm={true}/>;
     const loading = (this.state.loading || this.state.error) && <Loading error={this.state.error} />;
     const threads = this.state.threads.map((thread, index) => {
       return (
         <li key={thread._id}>
-          <Post 
+          <ThreadPreview
             id={thread.op._id}
             humanId={thread.op.humanId}
             text={thread.op.text}
@@ -68,8 +69,9 @@ class Board extends Component {
     return (
       <>
         <ul className='unstyled posts'>
-          {threads.length !== 0 && [...threads, form]}
+          {threads}
         </ul>
+        {form}
         {loading}
       </>
     );

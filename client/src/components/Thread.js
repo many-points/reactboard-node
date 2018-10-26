@@ -13,17 +13,17 @@ class Thread extends Component {
       id: this.props.id,
       op: '',
       posts: [],
-      showForm: false,
       loading: false,
-      error: false
+      error: false,
+      form: false
     }
   }
 
   componentWillMount() {
     this.setState({ loading: true });
-    fetch(`/api/thread/${this.state.id}`)
+    fetch(`/api/posts/${this.state.id}`)
     .then(res => res.json())
-    .then(res => this.setState({ posts: res.data.posts, loading: false, op: res.data.op }))
+    .then(res => this.setState({ posts: res.data.posts, loading: false, op: res.data.op, form: true }))
     .catch(error => {
       console.error(error);
       setTimeout(() => this.setState({error: true}));
@@ -37,10 +37,9 @@ class Thread extends Component {
       body: JSON.stringify(data)
     }
     this.setState({ loading: true });
-    return fetch(`/api/post`, request)
+    return fetch(`/api/posts/${this.state.id}`, request)
     .then(res => res.json())
     .then(res => {
-      console.log(request.body)
       if(res.success === false) throw Error('Request failed');
       this.setState({ posts: [...this.state.posts, res.post], loading: false },
         () => window.scrollTo(0, document.body.scrollHeight));
@@ -52,7 +51,7 @@ class Thread extends Component {
   }
 
   render() {
-    const form = <Form key='form' id={this.state.id} submit={this.addPost.bind(this)} />;
+    const form = this.state.form && <Form key='form' id={this.state.id} submit={this.addPost.bind(this)} />;
     const loading = (this.state.loading || this.state.error) && <Loading error={this.state.error} />;
     const posts = this.state.posts.map((post, index) => {
       return (
@@ -67,9 +66,10 @@ class Thread extends Component {
     });
     return (
       <>
-        <ul className='unstyled posts'>
-          {posts.length !== 0 && [...posts, form]}
+        <ul className='unstyled posts floaty'>
+          {posts}
         </ul>
+        {form}
         {loading}
       </>
     );

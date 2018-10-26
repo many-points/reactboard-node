@@ -48,13 +48,18 @@ body, html {
 
 .floaty {
   margin: 10px 0;
-  padding: 10px;
   background-color: #e9ecef;
   border-radius: 5px;
 }
 
 .post {
+  padding: 10px;
   transition: all ease-in-out .1s;
+  border-bottom: 1px solid #bbb;
+}
+
+li:last-child > .post {
+  border-bottom: none;
 }
 
 .slide-up {
@@ -141,6 +146,10 @@ body, html {
   margin-bottom: 10px;
 }
 
+.postBottom {
+  margin-top: 10px;
+}
+
 .postId {
   text-decoration: none;
   color: #bbb;
@@ -160,6 +169,10 @@ body, html {
 
 .postText {
   white-space: pre-wrap;
+}
+
+.form {
+  padding: 10px;
 }
 
 .postForm {

@@ -37,7 +37,7 @@ class Form extends Component {
       return;
     }
     this.setState({loading: true});
-    this.props.submit({threadId: this.props.id, text})
+    this.props.submit({text})
     .then(() => this.setState({text: '', loading: false}));
   }
 
@@ -50,19 +50,21 @@ class Form extends Component {
 
   render() {
     return (
-      <form className='form floaty slide-up' onSubmit={this.handleSubmit.bind(this)}>
-        <textarea
-          className='formTextarea' rows='7'
-          value={this.state.text}
-          onChange={this.handleChange.bind(this)}
-          onKeyDown={this.handleShortcut.bind(this)} />
-        <div className='formButtons'>
-          <input className='formSubmit btn' type='submit' value={this.buttonText} ref='submit' />
-          <span className={`formMessageBox ${this.state.alert ? 'textAlert' : ''}`}>
-            {this.messages[this.state.message]}
-          </span>
-        </div>
-      </form>
+      <div className='floaty'>
+        <form className='form slide-up' onSubmit={this.handleSubmit.bind(this)}>
+          <textarea
+            className='formTextarea' rows='7'
+            value={this.state.text}
+            onChange={this.handleChange.bind(this)}
+            onKeyDown={this.handleShortcut.bind(this)} />
+          <div className='formButtons'>
+            <input className='formSubmit btn' type='submit' value={this.buttonText} ref='submit' />
+            <span className={`formMessageBox ${this.state.alert ? 'textAlert' : ''}`}>
+              {this.messages[this.state.message]}
+            </span>
+          </div>
+        </form>
+      </div>
     );
   }
 }

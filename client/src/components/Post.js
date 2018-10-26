@@ -9,7 +9,7 @@ function Post(props) {
   const humanId = props.humanId || 'nothing';
   const dubs = checkDubs(humanId);
   return (
-    <div className='post floaty slide-up'>
+    <div className='post slide-up'>
       <div className='postTop'>
         <div className='postTopLeft'>
           <a href='#' className={`postId ${dubs ? 'dubs' : ''}`}>
