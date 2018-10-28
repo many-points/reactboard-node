@@ -1,6 +1,4 @@
-const _ = require('lodash');
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const router = express.Router();
@@ -16,40 +14,34 @@ const ENTRIES_PER_PAGE = 20;
  * @desc
  */
 router.get(`/`, (req, res) => {
-
-});
-
-/**
- * @name
- * @route   GET /api/threads
- * @desc    Redirect to /threads/0
- */
-router.get(`/threads`, (req, res) => {
   res.redirect('threads/0');
 });
 
 /**
  * @name    Get threads
- * @route   GET /api/threads/:page/:n
- * @desc    Get n threads, sorted by last updated, beginnig from n*page
+ * @route   GET /api/threads/:offset/:amount
+ * @desc    Get `amount` threads, sorted by last updated, beginning from `amount*offset`
  */
-function getThreads(req, res) {
-  const page = Number(req.params.page) || 0;
-  const n = Number(req.params.n) || ENTRIES_PER_PAGE;
-  Thread.find({}, {posts: {$slice: 3}})
-  .sort({updatedAt: -1})
-  .skip(n*page)
-  .limit(n)
-  .populate('op')
-  .populate('posts')
+router.get(`/threads/:offset?/:amount?`, (req, res) => {
+  const offset = Number(req.params.offset) || 0;
+  const amount = Number(req.params.amount) || ENTRIES_PER_PAGE;
+  
+  Thread.find(
+    {}, {},
+    { sort: { updatedAt: -1 }, skip: amount*offset, limit: amount }
+  )
+  .populate(['op', 'posts']).lean()
   .then(data => {
     if (!data) throw Error('No data received');
+    data = data.map(obj => {
+      obj.postCount = obj.posts.length;
+      obj.posts = obj.posts.slice(-3);
+      return obj;
+    });
     res.json({ success: true, data });
   })
   .catch(err => res.json({ success: false, error: err }));
-}
-router.get(`/threads/:page/`, getThreads);
-router.get(`/threads/:page/:n`, getThreads);
+});
 
 /**
  * @name    Get posts
@@ -77,7 +69,8 @@ router.post(`/threads`, (req, res) => {
     return res.json({ success: false, error: 'Bad request.' });
   
   const thread = new Thread({
-    _id: new mongoose.Types.ObjectId()
+    _id: new mongoose.Types.ObjectId(),
+    count
   });
   
   const postId = new mongoose.Types.ObjectId();
@@ -97,7 +90,7 @@ router.post(`/threads`, (req, res) => {
 
 /**
  * @name    Create post
- * @route   POST /api/posts
+ * @route   POST /api/posts/:threadId
  * @desc    Create new post in a thread with `threadId`
  */
 router.post(`/posts/:threadId`, (req, res) => {

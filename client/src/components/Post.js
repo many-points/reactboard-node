@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { formatDate } from '../utils/date';
 import { checkDubs } from '../utils/dubs';
@@ -32,6 +33,14 @@ function Post(props) {
      </div>
     </div>
   );
+}
+
+Post.propTypes = {
+  id:        PropTypes.string.isRequired,
+  humanId:   PropTypes.string.isRequired,
+  text:      PropTypes.string,
+  createdAt: PropTypes.string.isRequired,
+  isOp:      PropTypes.bool.isRequired
 }
 
 export default Post;

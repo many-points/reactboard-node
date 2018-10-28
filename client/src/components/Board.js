@@ -24,7 +24,7 @@ class Board extends Component {
     .then(res => this.setState({ threads: res.data, loading: false, form: true }))
     .catch(error => {
       console.error(error);
-      setTimeout(() => this.setState({error: true}));
+      this.setState({error: true});
     });
   }
 
@@ -59,9 +59,10 @@ class Board extends Component {
             humanId={thread.op.humanId}
             text={thread.op.text}
             createdAt={thread.op.createdAt}
-            isThread={true}
             linkTo={thread._id}
             threadUpdatedAt={thread.updatedAt}
+            posts={thread.posts}
+            postCount={thread.postCount}
           />
         </li>
       );

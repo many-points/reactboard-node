@@ -26,7 +26,7 @@ class Thread extends Component {
     .then(res => this.setState({ posts: res.data.posts, loading: false, op: res.data.op, form: true }))
     .catch(error => {
       console.error(error);
-      setTimeout(() => this.setState({error: true}));
+      this.setState({error: true});
     });
   }
 
