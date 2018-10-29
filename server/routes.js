@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -5,6 +6,7 @@ const router = express.Router();
 
 const { Post, Thread } = require('./db');
 const hash = require('./utils/hash');
+const generateToken = require('./utils/token');
 
 const ENTRIES_PER_PAGE = 20;
 
@@ -27,10 +29,14 @@ router.get(`/threads/:offset?/:amount?`, (req, res) => {
   const amount = Number(req.params.amount) || ENTRIES_PER_PAGE;
   
   Thread.find(
-    {}, {},
+    {}, { __v: 0 },
     { sort: { updatedAt: -1 }, skip: amount*offset, limit: amount }
   )
-  .populate(['op', 'posts']).lean()
+  .populate([
+    {path: 'op', select: '-__v -token'},
+    {path: 'posts', select: '-__v -token'}
+  ])
+  .lean()
   .then(data => {
     if (!data) throw Error('No data received');
     data = data.map(obj => {
@@ -70,21 +76,24 @@ router.post(`/threads`, (req, res) => {
   
   const thread = new Thread({
     _id: new mongoose.Types.ObjectId(),
-    count
   });
   
   const postId = new mongoose.Types.ObjectId();
   const opPost = new Post({
     _id: postId,
     humanId: hash(postId.toString()),
-    text: req.body.text
+    text: req.body.text,
+    token: generateToken()
   });
   thread.posts.push(opPost);
   thread.op = opPost;
   
   opPost.save()
   .then(() => thread.save())
-  .then(() => res.json({ success: true, thread }))
+  .then(() => {
+    thread.postCount = 1;
+    res.json({ success: true, thread });
+  })
   .catch(err => res.json({ success: false, error: err }));
 });
 
@@ -102,7 +111,8 @@ router.post(`/posts/:threadId`, (req, res) => {
   const post = new Post({
     _id: postId,
     humanId: hash(postId.toString()),
-    text: req.body.text
+    text: req.body.text,
+    token: generateToken()
   });
 
   Thread.findByIdAndUpdate(req.params.threadId, {$push: {posts: post}})
@@ -110,5 +120,31 @@ router.post(`/posts/:threadId`, (req, res) => {
   .then(() => res.json({ success: true, post }))
   .catch(err => res.json({ success: false, error: err }));
 });
+
+/**
+ * @name    Get file [dev only]
+ * @route   GET /api/images/:postId
+ * @desc
+ */
+router.get(`/images/:postId`, (req, res) => {
+  Post.findById(req.params.postId)
+  .then(data => {
+    console.log()
+    res.sendFile(__dirname + '/' + data.images[0]);
+  })
+  .catch(err => res.json({ success: false, error: err }));
+});
+
+/**
+ * @name    Upload image
+ * @route   POST /api/images/:postId/:token
+ * @desc    Attach an image to post
+ */
+router.post(`/images/:postId/:token`, (req, res) => {
+  Post.findByIdAndUpdate(req.params.postId, {$push: {images: req.file.path}})
+  .then(() => res.json({ success: true, path: req.file.path }))
+  .catch(err => res.json({ success: false, error: err }));
+});
+
 
 module.exports = router;

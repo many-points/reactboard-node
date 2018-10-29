@@ -38,10 +38,9 @@ class Board extends Component {
     return fetch(`/api/threads`, request)
     .then(res => res.json())
     .then(res => {
-      console.log(request.body)
       if(res.success === false) throw Error('Request failed');
-      this.setState({ threads: [...this.state.threads, res.thread], loading: false },
-        () => window.scrollTo(0, document.body.scrollHeight));
+      this.setState({ threads: [res.thread, ...this.state.threads], loading: false },
+        () => window.scrollTo(0, 0));
     })
     .catch(error => {
       setTimeout(() => this.setState({error: true}));

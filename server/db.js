@@ -9,7 +9,9 @@ mongoose.connect(uri, {useNewUrlParser: true})
 
 const postSchema = new Schema({
   text:   { type: String, default: '' },
-  humanId: { type: String, default: ''}
+  humanId: { type: String, default: ''},
+  images: [{ type: String, default: ''}],
+  token:  { type: String, default: ''}
 }, {
   timestamps: true
 });

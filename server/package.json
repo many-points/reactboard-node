@@ -15,7 +15,8 @@
     "express": "^4.16.4",
     "fnv-plus": "git+https://git@github.com/tjwebb/fnv-plus.git",
     "lodash": "^4.17.11",
-    "mongoose": "^5.3.4"
+    "mongoose": "^5.3.4",
+    "multer": "^1.4.1"
   },
   "devDependencies": {
     "nodemon": "^1.18.4"

@@ -12,14 +12,13 @@ class ThreadPreview extends Component {
     const threadUpdatedAt = formatDate(new Date(this.props.threadUpdatedAt));
     const humanId = this.props.humanId || 'nothing';
     const dubs = checkDubs(humanId);
-    const postCount = this.props.postCount;
     const opPost = (
       <li key='op'>
       <div className='post threadOp slide-up'>
       <div className='postTop'>
         <div className='postTopLeft'>
           <a href='#' className={`postId ${dubs ? 'dubs' : ''}`}>
-            <span>{humanId}</span>
+            <span>{'0\xa0' + humanId}</span>
           </a>
           {this.props.linkTo && <Link className='postLink' to={`/thread/${this.props.linkTo}`}>~</Link>}
         </div>
@@ -30,7 +29,7 @@ class ThreadPreview extends Component {
       <p className='postText unstyled'>{this.props.text}</p>
       <div className='postBottom'>
         <div className='postBottomLeft'>
-          <span className='postCount'>{`Total\xa0posts:\xa0${this.props.postCount}`}</span>
+          <span className='postCount'>{`Total\xa0posts:\xa0${this.props.postCount || '1'}`}</span>
         </div>
         <div className='postBottomRight'>
           <span className='lastPostTimestamp'>{`Last\xa0update:\xa0${threadUpdatedAt}`}</span>
@@ -43,6 +42,7 @@ class ThreadPreview extends Component {
       return ((post._id !== this.props.id) &&
         <li key={post._id}>
           <Post id={post._id}
+                index={index + this.props.postCount - this.props.posts.length}
                 humanId={post.humanId}
                 text={post.text}
                 createdAt={post.createdAt}

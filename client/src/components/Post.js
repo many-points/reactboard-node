@@ -13,6 +13,7 @@ function Post(props) {
     <div className='post slide-up'>
       <div className='postTop'>
         <div className='postTopLeft'>
+          {`${props.index}\xa0`}
           <a href='#' className={`postId ${dubs ? 'dubs' : ''}`}>
             <span>{humanId}</span>
             {props.isOp && <>{'~'}<span className='op'>op</span></>}

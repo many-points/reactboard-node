@@ -4,6 +4,7 @@ node_modules
 
 /client/build
 server/dbconfig.js
+server/img
 
 .DS_Store
 .env.local

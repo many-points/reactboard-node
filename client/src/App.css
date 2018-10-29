@@ -34,9 +34,25 @@ body, html {
   vertical-align: middle;
 }
 
+.btn.formFile {
+  background-color: #e9ecef;
+  color: #212529;
+  border: 1px solid #bbb;
+  padding: 6px 12px;
+  margin-right: 10px;
+}
+
 .btn:hover {
   background-color: #0069d9;
   border-color: #0062cc;
+}
+
+.btn.formFile:hover {
+  color: #eee;
+}
+
+.btn.formSubmit {
+  margin-right: 10px;
 }
 
 .container {
@@ -63,7 +79,7 @@ li:last-child > .post {
 }
 
 .slide-up {
-  animation: slide-up 0.4s ease;
+  animation: slide-up 0.2s ease;
 }
 
 @keyframes slide-up {
@@ -195,7 +211,8 @@ li:last-child > .post {
   justify-content: space-between;
 }
 
-.formMessageBox {
+.formMessageBox, .formFilename {
+  display: inline-block;
   color: #bbb;
   font-size: .75rem;
   vertical-align: middle;
