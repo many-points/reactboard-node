@@ -2,7 +2,7 @@
 
 node_modules
 
-server/img
+img/
 
 .DS_Store
 .env.local
