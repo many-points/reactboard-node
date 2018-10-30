@@ -8,7 +8,7 @@ const { Post, Thread } = require('./models');
 const hash = require('./utils/hash');
 const generateToken = require('./utils/token');
 
-const ENTRIES_PER_PAGE = 20;
+const config = './config';
 
 /**
  * @name
@@ -26,7 +26,7 @@ router.get(`/`, (req, res) => {
  */
 router.get(`/threads/:offset?/:amount?`, (req, res) => {
   const offset = Number(req.params.offset) || 0;
-  const amount = Number(req.params.amount) || ENTRIES_PER_PAGE;
+  const amount = Number(req.params.amount) || config.ENTRIES_PER_PAGE;
   
   Thread.find({}, {}, { sort: { updatedAt: -1 }, skip: amount*offset, limit: amount })
   .populate([{path: 'op', select: '-token'}, {path: 'posts', select: '-token'}])

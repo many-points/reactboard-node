@@ -7,9 +7,9 @@ const crypto = require('crypto');
 
 const app = express();
 
-const uri = require('./dbconfig');
+const config = require('./config');
 
-mongoose.connect(uri, {useNewUrlParser: true})
+mongoose.connect(config.DB_URI, {useNewUrlParser: true})
   .then(() => console.log('Connected to db'))
   .catch((err) => console.log('Database error:', err));
 

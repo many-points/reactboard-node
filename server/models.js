@@ -7,16 +7,14 @@ const postSchema = new Schema({
   images: [{ type: String, default: ''}],
   token:  { type: String, default: ''}
 }, {
-  timestamps: true,
-  versionKey: false
+  timestamps: true
 });
 
 const threadSchema = new Schema({
   posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   op: {type: Schema.Types.ObjectId, ref: 'Post'}
 }, {
-  timestamps: true,
-  versionKey: false
+  timestamps: true
 });
 
 module.exports = {
