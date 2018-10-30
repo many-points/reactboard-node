@@ -9,6 +9,7 @@ function Post(props) {
   const threadUpdatedAt = props.isThread ? formatDate(new Date(props.threadUpdatedAt)) : null;
   const humanId = props.humanId || 'nothing';
   const dubs = checkDubs(humanId);
+  const images = props.images;
   return (
     <div className='post slide-up'>
       <div className='postTop'>
@@ -24,6 +25,7 @@ function Post(props) {
           <span className='postTimestamp'>{date}</span>
         </div>
       </div>
+     {images && images.length !== 0 && <img className='postImage' src={'/' + images[0]}></img>}
      <p className='postText unstyled'>{props.text}</p>
      <div className='postBottom'>
       <div className='postBottomLeft'>

@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const router = express.Router();
 
-const { Post, Thread } = require('./db');
+const { Post, Thread } = require('./models');
 const hash = require('./utils/hash');
 const generateToken = require('./utils/token');
 
@@ -28,14 +28,8 @@ router.get(`/threads/:offset?/:amount?`, (req, res) => {
   const offset = Number(req.params.offset) || 0;
   const amount = Number(req.params.amount) || ENTRIES_PER_PAGE;
   
-  Thread.find(
-    {}, { __v: 0 },
-    { sort: { updatedAt: -1 }, skip: amount*offset, limit: amount }
-  )
-  .populate([
-    {path: 'op', select: '-__v -token'},
-    {path: 'posts', select: '-__v -token'}
-  ])
+  Thread.find({}, {}, { sort: { updatedAt: -1 }, skip: amount*offset, limit: amount })
+  .populate([{path: 'op', select: '-token'}, {path: 'posts', select: '-token'}])
   .lean()
   .then(data => {
     if (!data) throw Error('No data received');
@@ -118,20 +112,6 @@ router.post(`/posts/:threadId`, (req, res) => {
   Thread.findByIdAndUpdate(req.params.threadId, {$push: {posts: post}})
   .then(() => post.save())
   .then(() => res.json({ success: true, post }))
-  .catch(err => res.json({ success: false, error: err }));
-});
-
-/**
- * @name    Get file [dev only]
- * @route   GET /api/images/:postId
- * @desc
- */
-router.get(`/images/:postId`, (req, res) => {
-  Post.findById(req.params.postId)
-  .then(data => {
-    console.log()
-    res.sendFile(__dirname + '/' + data.images[0]);
-  })
   .catch(err => res.json({ success: false, error: err }));
 });
 

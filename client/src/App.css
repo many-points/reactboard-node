@@ -183,6 +183,10 @@ li:last-child > .post {
   color: green;
 }
 
+.postImage {
+  max-width: 50%;
+}
+
 .postText {
   white-space: pre-wrap;
 }

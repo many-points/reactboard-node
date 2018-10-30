@@ -12,6 +12,7 @@ class ThreadPreview extends Component {
     const threadUpdatedAt = formatDate(new Date(this.props.threadUpdatedAt));
     const humanId = this.props.humanId || 'nothing';
     const dubs = checkDubs(humanId);
+    const images = this.props.images;
     const opPost = (
       <li key='op'>
       <div className='post threadOp slide-up'>
@@ -26,6 +27,7 @@ class ThreadPreview extends Component {
           <span className='postTimestamp'>{date}</span>
         </div>
       </div>
+      {images && images.length !== 0 && <img src={'/' + images[0]}></img>}
       <p className='postText unstyled'>{this.props.text}</p>
       <div className='postBottom'>
         <div className='postBottomLeft'>
@@ -46,7 +48,8 @@ class ThreadPreview extends Component {
                 humanId={post.humanId}
                 text={post.text}
                 createdAt={post.createdAt}
-                isOp={false} />
+                isOp={false}
+                images={post.images[0]} />
         </li>
       );
     });

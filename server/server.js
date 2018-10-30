@@ -1,10 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const multer = require('multer');
 
 const crypto = require('crypto');
 
 const app = express();
+
+const uri = require('./dbconfig');
+
+mongoose.connect(uri, {useNewUrlParser: true})
+  .then(() => console.log('Connected to db'))
+  .catch((err) => console.log('Database error:', err));
+
 const router = require('./routes');
 
 app.use(multer({
@@ -32,6 +40,7 @@ app.use(multer({
 }).single('file'));
 app.use(bodyParser.json());
 app.use('/api', router);
+app.use('/img', express.static('img'));
 
 app.use((req, res) => {
   res.status(404);

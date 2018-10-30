@@ -55,7 +55,7 @@ class Thread extends Component {
     });
   }
 
-  addPost(data, file) {
+  addPost(data, filedata) {
     const request = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
@@ -68,9 +68,8 @@ class Thread extends Component {
       if(res.success === false) throw Error('Request failed');
       this.setState({ posts: [...this.state.posts, res.post], loading: false },
         () => window.scrollTo(0, document.body.scrollHeight));
-      if(file) {
-        console.log(res)
-        this.addImage(Object.assign(file, {postId: res.post._id, token: res.post.token}));
+      if(filedata.file) {
+        this.addImage(Object.assign(filedata, {postId: res.post._id, token: res.post.token}));
       }
     })
     .catch(error => {
@@ -96,7 +95,8 @@ class Thread extends Component {
                 humanId={post.humanId}
                 text={post.text}
                 createdAt={post.createdAt}
-                isOp={post._id === this.state.op} />
+                isOp={post._id === this.state.op}
+                images={post.images} />
         </li>
       );
     });

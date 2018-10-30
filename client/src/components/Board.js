@@ -62,7 +62,7 @@ class Board extends Component {
             threadUpdatedAt={thread.updatedAt}
             posts={thread.posts}
             postCount={thread.postCount}
-          />
+            images={thread.op.images[0]} />
         </li>
       );
     });
