@@ -48,7 +48,9 @@ app.use((req, res) => {
   res.send({success: false, error: '404'})
 });
 
-app.listen(3001, '0.0.0.0', (err) => {
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, (err) => {
   err ? console.log('error:', err)
-      : console.log('listening...');
+      : console.log(`listening on ${PORT}`);
 });
