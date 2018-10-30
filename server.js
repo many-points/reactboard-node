@@ -2,8 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const morgan = require('morgan');
 
 const crypto = require('crypto');
+const path = require('path');
 
 const app = express();
 
@@ -14,7 +16,7 @@ mongoose.connect(config.DB_URI, {useNewUrlParser: true})
   .catch((err) => console.log('Database error:', err));
 
 const router = require('./routes');
-
+app.use(morgan('combined'));
 app.use(multer({
   fileFilter: (req, file, cb) => {
     const types = ['image/jpeg', 'image/gif', 'image/png'];
@@ -41,12 +43,16 @@ app.use(multer({
 app.use(bodyParser.json());
 app.use('/api', router);
 app.use('/img', express.static('img'));
-app.use('/', express.static('client/build'))
-
+app.use('/', express.static('client/build'));
+app.use('*', (req, res) => {
+  console.log(path.resolve(__dirname + '/client/build/index.html'))
+  res.sendFile(path.resolve(__dirname + '/client/build/index.html'));
+});
 app.use((req, res) => {
   res.status(404);
   res.send({success: false, error: '404'})
 });
+
 
 const PORT = process.env.PORT || 3001;
 
