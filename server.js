@@ -41,6 +41,7 @@ app.use(multer({
 app.use(bodyParser.json());
 app.use('/api', router);
 app.use('/img', express.static('img'));
+app.use('/', express.static('client/build'))
 
 app.use((req, res) => {
   res.status(404);
