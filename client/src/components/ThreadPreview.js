@@ -49,7 +49,7 @@ class ThreadPreview extends Component {
                 text={post.text}
                 createdAt={post.createdAt}
                 isOp={false}
-                images={post.images[0]} />
+                images={post.images} />
         </li>
       );
     });
