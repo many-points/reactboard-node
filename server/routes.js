@@ -10,6 +10,10 @@ const generateToken = require('./utils/token');
 
 const config = './config';
 
+function returnError(res, error) {
+  return res.json({ success: false, error: err });
+}
+
 /**
  * @name
  * @route   GET /api/
@@ -40,7 +44,7 @@ router.get(`/threads/:offset?/:amount?`, (req, res) => {
     });
     res.json({ success: true, data });
   })
-  .catch(err => res.json({ success: false, error: err }));
+  .catch(err => returnError(res, err));
 });
 
 /**
@@ -55,7 +59,7 @@ router.get(`/posts/:threadId`, (req, res) => {
     if (!data) throw Error('No data received');
     res.json({ success: true, data });
   })
-  .catch(err => res.json({ success: false, error: err }));
+  .catch(err => returnError(res, err));
 });
 
 /**
@@ -66,7 +70,7 @@ router.get(`/posts/:threadId`, (req, res) => {
 router.post(`/threads`, (req, res) => {
   const keys = ['text'];
   if(!keys.every(key => key in req.body))
-    return res.json({ success: false, error: 'Bad request.' });
+    return returnError(res, 'Bad request.');
   
   const thread = new Thread({
     _id: new mongoose.Types.ObjectId(),
@@ -88,7 +92,7 @@ router.post(`/threads`, (req, res) => {
     thread.postCount = 1;
     res.json({ success: true, thread });
   })
-  .catch(err => res.json({ success: false, error: err }));
+  .catch(err => returnError(res, err));
 });
 
 /**
@@ -99,7 +103,7 @@ router.post(`/threads`, (req, res) => {
 router.post(`/posts/:threadId`, (req, res) => {
   const keys = ['text'];
   if(!keys.every(key => key in req.body))
-    return res.json({ success: false, error: 'Bad request.' });
+    return returnError(res, 'Bad request');
   
   const postId = new mongoose.Types.ObjectId();
   const post = new Post({
@@ -112,7 +116,7 @@ router.post(`/posts/:threadId`, (req, res) => {
   Thread.findByIdAndUpdate(req.params.threadId, {$push: {posts: post}})
   .then(() => post.save())
   .then(() => res.json({ success: true, post }))
-  .catch(err => res.json({ success: false, error: err }));
+  .catch(err => returnError(res, err));
 });
 
 /**
@@ -120,11 +124,19 @@ router.post(`/posts/:threadId`, (req, res) => {
  * @route   POST /api/images/:postId/:token
  * @desc    Attach an image to post
  */
-router.post(`/images/:postId/:token`, (req, res) => {
-  Post.findByIdAndUpdate(req.params.postId, {$push: {images: req.file.path}})
-  .then(() => res.json({ success: true, path: req.file.path }))
-  .catch(err => res.json({ success: false, error: err }));
+router.post(`/images/:postId`, (req, res) => {
+  const token = req.header('Authentication');
+  Post.findById(req.params.postId)
+  .then(data => {
+    if(data.token === token) {
+      Post.findByIdAndUpdate(req.params.postId, {$push: {images: req.file.path}})
+      .then(() => res.json({ success: true, path: req.file.path }))
+      .catch(err => returnError(res, err));
+    } else {
+      throw Error('Incorrect token');
+    }
+  })
+  .catch(err => returnError(res, err));
 });
-
 
 module.exports = router;

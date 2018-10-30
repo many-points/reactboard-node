@@ -36,9 +36,10 @@ class Thread extends Component {
     console.log(formdata)
     const request = {
       method: 'POST',
+      headers: { 'Authentication': data.token },
       body: formdata
     }
-    return fetch(`/api/images/${data.postId}/${data.token}`, request)
+    return fetch(`/api/images/${data.postId}`, request)
     .then(res => res.json())
     .then(res => {
       const post = this.state.posts.find(post => post._id === data.postId);
