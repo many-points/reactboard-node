@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, ServerRouter, Route, Redirect } from 'react-router-dom';
 
 import Thread from './components/Thread';
 import Board from './components/Board';
 
 import './App.css';
 
-class App extends Component {
+export default class App extends Component {
   render() {
     const renderThread = (props) => {
       return <Thread id={props.match.params.id} />;
@@ -16,14 +16,12 @@ class App extends Component {
     }
 
     return (
-      <Router>
+      <ServerRouter>
         <div className='container'>
           <Route exact path='/' render={renderThreadList} />
           <Route exact path='/thread/:id' render={renderThread} />
         </div>
-      </Router>
+      </ServerRouter>
     );
   }
 }
-
-export default App;

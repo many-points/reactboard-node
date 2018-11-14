@@ -29,6 +29,7 @@ class Thread extends Component {
       this.setState({error: true});
     });
   }
+  
   addImage(data) {
     console.log(data)
     const formdata = new FormData();

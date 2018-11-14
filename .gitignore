@@ -3,6 +3,8 @@
 node_modules
 
 img/
+client/build/
+dbconfig.js
 
 .DS_Store
 .env.local

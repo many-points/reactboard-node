@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const router = express.Router();
+const ssr = express.Router();
 
 const { Post, Thread } = require('./models');
 const hash = require('./utils/hash');
@@ -10,9 +11,18 @@ const generateToken = require('./utils/token');
 
 const config = './config';
 
-function returnError(res, error) {
+function returnError(res, err) {
   return res.json({ success: false, error: err });
 }
+
+/**
+ * @name
+ * @route   GET /
+ * @desc    Thread list ssr
+ */
+ssr.get(`/`, (req, res) => {
+  
+});
 
 /**
  * @name
@@ -126,6 +136,7 @@ router.post(`/posts/:threadId`, (req, res) => {
  */
 router.post(`/images/:postId`, (req, res) => {
   const token = req.header('Authentication');
+
   Post.findById(req.params.postId)
   .then(data => {
     if(data.token === token) {

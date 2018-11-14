@@ -1,3 +1,11 @@
+require('ignore-styles');
+
+require('@babel/register')({
+    ignore: [ /(node_modules)/ ],
+    presets: ["@babel/preset-env", "@babel/react"],
+    plugins: ["@babel/plugin-proposal-class-properties"]
+});
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -15,7 +23,9 @@ mongoose.connect(config.DB_URI, {useNewUrlParser: true})
   .then(() => console.log('Connected to db'))
   .catch((err) => console.log('Database error:', err));
 
-const router = require('./routes');
+const api = require('./routes');
+const ssr = require('./ssr');
+
 app.use(morgan('combined'));
 app.use(multer({
   fileFilter: (req, file, cb) => {
@@ -41,13 +51,10 @@ app.use(multer({
   })
 }).single('file'));
 app.use(bodyParser.json());
-app.use('/api', router);
+app.use('/api', api);
 app.use('/img', express.static('img'));
 app.use('/', express.static('client/build'));
-app.use('*', (req, res) => {
-  console.log(path.resolve(__dirname + '/client/build/index.html'))
-  res.sendFile(path.resolve(__dirname + '/client/build/index.html'));
-});
+app.use('/ssr', ssr);
 app.use((req, res) => {
   res.status(404);
   res.send({success: false, error: '404'})
